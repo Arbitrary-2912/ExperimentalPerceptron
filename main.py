@@ -24,6 +24,7 @@ class BasicMultiClassClassifier():
         self.model = nn.Sequential(
             nn.Linear(in_features=data_dimensions[0] * data_dimensions[1], out_features=2 * len_classes),
             nn.Linear(in_features=2 * len_classes, out_features=int(8. / 5 * len_classes)),
+            nn.Relu(),
             nn.Linear(in_features=int(8. / 5 * len_classes), out_features=len_classes)
         )
 
@@ -98,7 +99,7 @@ class Perceptron():
         self.training_loss = []
         self.accuracy = []
 
-    ## Trains Underlying ML Model
+    ## Trains Underlying ML Model (change epochs as per data demands)
     def train(self, epochs=75, batch_size=32) -> None:
         global classes
         print('Training Initiated')
