@@ -23,8 +23,9 @@ class BasicMultiClassClassifier():
         ## Initialize Model
         self.model = nn.Sequential(
             nn.Linear(in_features=data_dimensions[0] * data_dimensions[1], out_features=2 * len_classes),
+            nn.ReLU()
             nn.Linear(in_features=2 * len_classes, out_features=int(8. / 5 * len_classes)),
-            nn.Relu(),
+            nn.ReLU(),
             nn.Linear(in_features=int(8. / 5 * len_classes), out_features=len_classes)
         )
 
