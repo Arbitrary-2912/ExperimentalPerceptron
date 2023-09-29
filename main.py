@@ -22,11 +22,12 @@ class BasicMultiClassClassifier():
 
         ## Initialize Model
         self.model = nn.Sequential(
-            nn.Linear(in_features=data_dimensions[0] * data_dimensions[1], out_features=2 * len_classes),
-            nn.ReLU()
-            nn.Linear(in_features=2 * len_classes, out_features=int(8. / 5 * len_classes)),
+            nn.Linear(in_features=data_dimensions[0] * data_dimensions[1], out_features=(8 * data_dimensions[0])),
             nn.ReLU(),
-            nn.Linear(in_features=int(8. / 5 * len_classes), out_features=len_classes)
+            nn.Linear(in_features=(8 * data_dimensions[0]), out_features=int(32. / 5 * len_classes * data_dimensions[0])),
+            nn.Linear(in_features=int(32. / 5 * len_classes * data_dimensions[0]), out_features=int(16. / 5 * len_classes)),
+            nn.ReLU(),
+            nn.Linear(in_features=int(16. / 5 * len_classes), out_features=len_classes)
         )
 
     ## Simple Forward
@@ -94,14 +95,14 @@ class Perceptron():
 
         ## Defining Loss Function and Optimizer
         self.loss_fn = nn.MSELoss()
-        self.optimizer = torch.optim.Adam(params=self.model.model.parameters(), lr=0.005)
+        self.optimizer = torch.optim.Adam(params=self.model.model.parameters(), lr=0.05)
 
         ## Defining Statistics
         self.training_loss = []
         self.accuracy = []
 
     ## Trains Underlying ML Model (change epochs as per data demands)
-    def train(self, epochs=75, batch_size=32) -> None:
+    def train(self, epochs=128, batch_size=32) -> None:
         global classes
         print('Training Initiated')
         ## Training Loop
@@ -191,7 +192,8 @@ class Perceptron():
             prediction_tensor = torch.from_numpy(prediction_data).to(torch.float32).unsqueeze(dim=0).unsqueeze(dim=0)
 
         ## Utilize NN to Determine Class
-        output_tensor = self.model.model(prediction_tensor)
+        with torch.inference_mode():
+            output_tensor = self.model.model(prediction_tensor)
         global classifiers
         return classifiers[torch.argmax(output_tensor)] + f' (confidence: {torch.max(output_tensor)})'
 
@@ -581,7 +583,7 @@ try:
         class_label_var.set(f'Prediction: {prediction}')
         time.sleep(0.001)
 
-        root.update_idletasks
+        root.update_idletasks()
 
 
     ## Button: Classify Frame
