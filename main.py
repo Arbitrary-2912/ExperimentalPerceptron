@@ -177,7 +177,7 @@ class Perceptron():
 
             ## Display Epoch Metrics
             print(
-                f'Epoch {epoch + 0:03}: | Training Time: {(train_end - start)}s | Training Loss: {training_epoch_loss} | Validation Time: {(validation_end - train_end) + 0:03}s | Validation Loss: {validation_epoch_loss}')
+                f'Epoch {epoch + 0:03}: | Training Time: {(train_end - start):02}s | Training Loss: {training_epoch_loss:05} | Validation Time: {(validation_end - train_end):02}s | Validation Loss: {validation_epoch_loss:05}')
 
         ## Export Model
         PATH = os.path.join("models", f"trained_model.pt")
